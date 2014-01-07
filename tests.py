@@ -10,6 +10,14 @@ class CatalystTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         self.filename = "mountains-1.csv"
         self.local_lines = self.get_input_file(self.filename)
+        self.expected_key = {
+            "GeoNameId": 0,
+            "Name": 1,
+            "Country": 2,
+            "Latitude": 3,
+            "Longitude": 4,
+            "Altitude (m)": 5
+        }
 
         super(CatalystTest, self).__init__(*args, **kwargs)
 
@@ -19,17 +27,9 @@ class CatalystTest(unittest.TestCase):
         self.assert_list(self.local_lines, actual)
 
     def test_header_key(self):
-        expected = {
-            "GeoNameId": 0,
-            "Name": 1,
-            "Country": 2,
-            "Latitude": 3,
-            "Longitude": 4,
-            "Altitude (m)": 5
-        }
         actual = mountains.create_key(self.local_lines[0])
 
-        self.assertEqual(expected, actual)
+        self.assertEqual(self.expected_key, actual)
 
     def test_header(self):
         expected = "2014-01-16 15:42:29 (Thursday)"
@@ -40,7 +40,21 @@ class CatalystTest(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_output(self):
+    def test_format_data_1(self):
+        input = "5885171,Angel Peak,CA,58.48553,-124.85859,6858"
+        expected = "Angel Peak has an altitude of 6858 meters."
+        actual = mountains.format_data(self.expected_key, input)
+
+        self.assertEqual(expected, actual)
+
+    def test_format_data_2(self):
+        input = "6115068,Queen Charlotte Island,CA,52.9995,-132.0034,null"
+        expected = "Queen Charlotte Island has an altitude of unknown meters."
+        actual = mountains.format_data(self.expected_key, input)
+
+        self.assertEqual(expected, actual)
+
+    def test_full_output(self):
         expected = self.get_expected_output()
         actual = self.get_actual_output()
 

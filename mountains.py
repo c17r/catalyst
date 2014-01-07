@@ -22,6 +22,16 @@ def create_header(dt):
     return header
 
 
+def format_data(key, data):
+    d_split = data.split(",")
+
+    location = d_split[key["Name"]]
+    altitude = d_split[key["Altitude (m)"]]
+    altitude = "unknown" if altitude == "null" else altitude
+
+    return "%s has an altitude of %s meters." % (location, altitude)
+
+
 def main():
     now = datetime.now()
     print create_header(now)
@@ -31,11 +41,7 @@ def main():
     del lines[0]
 
     for line in lines:
-        data = line.split(",")
-        location = data[key["Name"]]
-        altitude = data[key["Altitude (m)"]]
-        altitude = "unknown" if altitude == "null" else altitude
-        print "%s has an altitude of %s meters." % (location, altitude)
+        print format_data(key, line)
 
     return 0
 
