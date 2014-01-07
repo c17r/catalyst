@@ -1,11 +1,17 @@
 import sys
 import os
 from datetime import datetime
+import requests
 
 
-def get_data(filename):
+def get_file_data(filename):
     lines = [l.rstrip() for l in open(filename, "r")]
-    return lines
+    return iter(lines)
+
+
+def get_http_data(url):
+    req = requests.get(url)
+    return req.iter_lines()
 
 
 def create_key(header):
@@ -33,12 +39,15 @@ def format_data(key, data):
 
 
 def main():
+    url = "http://www.catalystsecure.com/public/tasks/mountains/mountains-1.csv"
+
+    lines = get_http_data(url)
+
+    header = lines.next()
+    key = create_key(header)
+
     now = datetime.now()
     print create_header(now)
-
-    lines = get_data("mountains-1.csv")
-    key = create_key(lines[0])
-    del lines[0]
 
     for line in lines:
         print format_data(key, line)

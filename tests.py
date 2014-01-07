@@ -8,6 +8,7 @@ from datetime import datetime
 class CatalystTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
+        self.url = "http://www.catalystsecure.com/public/tasks/mountains/mountains-1.csv"
         self.filename = "mountains-1.csv"
         self.local_lines = self.get_input_file(self.filename)
         self.expected_key = {
@@ -21,10 +22,22 @@ class CatalystTest(unittest.TestCase):
 
         super(CatalystTest, self).__init__(*args, **kwargs)
 
-    def test_get_data(self):
-        actual = mountains.get_data(self.filename)
+    def test_get_file_data(self):
+        actual = mountains.get_file_data(self.filename)
 
         self.assert_list(self.local_lines, actual)
+
+    def test_get_http_data_1(self):
+        url = "http://httpbin.org/get"
+        data = mountains.get_http_data(url)
+
+        found = False
+        for line in data:
+            if line.find('"url"') and line.find(url):
+                found = True
+                break
+
+        self.assertTrue(found, "invalid returned HTTP data")
 
     def test_header_key(self):
         actual = mountains.create_key(self.local_lines[0])
