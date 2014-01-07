@@ -1,4 +1,5 @@
 import sys
+import os
 from datetime import datetime
 
 
@@ -13,10 +14,17 @@ def create_key(header):
     return dict(tmp)
 
 
+def create_header(dt):
+    header = ""
+    header += dt.strftime("%Y-%m-%d %H:%M:%S (%A)")
+    header += os.linesep
+
+    return header
+
+
 def main():
     now = datetime.now()
-    print now.strftime("%Y-%m-%d %H:%M:%S (%A)")
-    print ""
+    print create_header(now)
 
     lines = get_data("mountains-1.csv")
     key = create_key(lines[0])

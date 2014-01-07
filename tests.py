@@ -2,6 +2,7 @@ import unittest
 import subprocess
 import os
 import mountains
+from datetime import datetime
 
 
 class CatalystTest(unittest.TestCase):
@@ -27,6 +28,15 @@ class CatalystTest(unittest.TestCase):
             "Altitude (m)": 5
         }
         actual = mountains.create_key(self.local_lines[0])
+
+        self.assertEqual(expected, actual)
+
+    def test_header(self):
+        expected = "2014-01-16 15:42:29 (Thursday)"
+
+        dt = datetime(2014, 1, 16, 15, 42, 29)
+        header = mountains.create_header(dt)
+        actual = header.split(os.linesep)[0]
 
         self.assertEqual(expected, actual)
 
