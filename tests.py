@@ -6,13 +6,29 @@ import mountains
 
 class CatalystTest(unittest.TestCase):
 
+    def __init__(self, *args, **kwargs):
+        self.filename = "mountains-1.csv"
+        self.local_lines = self.get_input_file(self.filename)
+
+        super(CatalystTest, self).__init__(*args, **kwargs)
+
     def test_get_data(self):
-        filename = "mountains-1.csv"
+        actual = mountains.get_data(self.filename)
 
-        expected = self.get_input_file(filename)
-        actual = mountains.get_data(filename)
+        self.assert_list(self.local_lines, actual)
 
-        self.assert_list(expected, actual)
+    def test_header_key(self):
+        expected = {
+            "GeoNameId": 0,
+            "Name": 1,
+            "Country": 2,
+            "Latitude": 3,
+            "Longitude": 4,
+            "Altitude (m)": 5
+        }
+        actual = mountains.create_key(self.local_lines[0])
+
+        self.assertEqual(expected, actual)
 
     def test_output(self):
         expected = self.get_expected_output()
