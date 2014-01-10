@@ -83,7 +83,7 @@ class CatalystTest(unittest.TestCase):
         return lines
 
     def get_actual_output(self):
-        output = subprocess.check_output(["python", "./mountains.py"])
+        output = subprocess.check_output(["python", "./mountains.py", self.url])
         output_lines = output.split(os.linesep)
         del output_lines[0]
         return output_lines

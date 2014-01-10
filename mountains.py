@@ -1,7 +1,18 @@
 import sys
 import os
+import argparse
 from datetime import datetime
 import requests
+
+
+def cmd_line_parse():
+    parser = argparse.ArgumentParser(description="""
+        Retrieve the mountain data.
+        Output each mountains altitude (if present).
+        """)
+    parser.add_argument("URL", help="URL that contains the mountain data")
+    args = parser.parse_args()
+    return args.URL
 
 
 def get_file_data(filename):
@@ -39,8 +50,8 @@ def format_data(key, data):
 
 
 def main():
-    url = "http://www.catalystsecure.com/public/tasks/mountains/mountains-1.csv"
 
+    url = cmd_line_parse()
     lines = get_http_data(url)
 
     header = lines.next()
