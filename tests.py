@@ -27,6 +27,11 @@ class CatalystTest(unittest.TestCase):
 
         self.assert_list(self.local_lines, actual)
 
+    def test_get_file_data_exception(self):
+        self.assertRaises(mountains.MissingDataError,
+                          mountains.get_file_data,
+                          "blank.csv")
+
     def test_get_http_data_1(self):
         url = "http://httpbin.org/get"
         data = mountains.get_http_data(url)
@@ -38,6 +43,13 @@ class CatalystTest(unittest.TestCase):
                 break
 
         self.assertTrue(found, "invalid returned HTTP data")
+
+    def test_get_http_data_exception(self):
+        url = "http://httpbin.org/status/500"
+
+        self.assertRaises(mountains.MissingDataError,
+                          mountains.get_http_data,
+                          url)
 
     def test_header_key(self):
         actual = mountains.create_key(self.local_lines[0])
@@ -83,7 +95,10 @@ class CatalystTest(unittest.TestCase):
         return lines
 
     def get_actual_output(self):
-        output = subprocess.check_output(["python", "./mountains.py", self.url])
+        output = subprocess.check_output([
+            "python",
+            "./mountains.py",
+            self.url])
         output_lines = output.split(os.linesep)
         del output_lines[0]
         return output_lines

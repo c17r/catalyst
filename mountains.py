@@ -5,6 +5,18 @@ from datetime import datetime
 import requests
 
 
+class RetrieveError(Exception):
+    pass
+
+
+class MissingDataError(Exception):
+    pass
+
+
+class InvalidDataError(Exception):
+    pass
+
+
 def cmd_line_parse():
     parser = argparse.ArgumentParser(description="""
         Retrieve the mountain data.
@@ -16,12 +28,25 @@ def cmd_line_parse():
 
 
 def get_file_data(filename):
-    lines = [l.rstrip() for l in open(filename, "r")]
+    try:
+        lines = [l.rstrip() for l in open(filename, "r")]
+    except Exception as e:
+        raise RetrieveError("File error: %s" % e.message)
+
+    if len(lines) == 0:
+        raise MissingDataError("File contains no data.")
     return iter(lines)
 
 
 def get_http_data(url):
-    req = requests.get(url)
+    try:
+        req = requests.get(url)
+    except Exception as e:
+        raise RetrieveError("URL error: %s" % e.message)
+
+    if len(req.text) == 0:
+        raise MissingDataError("URL contains no data.")
+
     return req.iter_lines()
 
 
@@ -42,8 +67,12 @@ def create_header(dt):
 def format_data(key, data):
     d_split = data.split(",")
 
-    location = d_split[key["Name"]]
-    altitude = d_split[key["Altitude (m)"]]
+    try:
+        location = d_split[key["Name"]]
+        altitude = d_split[key["Altitude (m)"]]
+    except Exception as e:
+        raise InvalidDataError("Data format error: %s" % e.message)
+
     altitude = "unknown" if altitude == "null" else altitude
 
     return "%s has an altitude of %s meters." % (location, altitude)
@@ -67,4 +96,8 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except (MissingDataError, RetrieveError, InvalidDataError) as e:
+        print "Error: %s" % e.message
+        sys.exit(-1)
