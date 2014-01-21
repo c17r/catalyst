@@ -40,7 +40,7 @@ def get_file_data(filename):
 
 def get_http_data(url):
     try:
-        req = requests.get(url)
+        req = requests.get(url, stream=True)
     except Exception as e:
         raise RetrieveError("URL error: %s" % e.message)
 
@@ -90,7 +90,8 @@ def main():
     print create_header(now)
 
     for line in lines:
-        print format_data(key, line)
+        if line:
+            print format_data(key, line)
 
     return 0
 
