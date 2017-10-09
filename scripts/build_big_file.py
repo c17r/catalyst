@@ -8,7 +8,7 @@ def main():
     count = (1024 ** 3) / len(lines)
 
     with open("mountains-1.big", "w") as f:
-        for x in xrange(count):
+        for x in range(count):
             f.write(lines)
 
 
