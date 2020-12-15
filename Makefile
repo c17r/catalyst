@@ -1,31 +1,31 @@
 
 init:
-	@pip install -U pipenv
-	@pipenv install --dev
+	@pip install -U poetry
+	@poetry install
 
 update:
-	@pipenv update --dev
+	@poetry update
 
 flake:
-	@pipenv run flake8
+	@poetry run flake8
 
 test: flake
-	@pipenv run py.test -v
+	@poetry run py.test -v
 
 coverage: flake
-	@pipenv run py.test -v --cov-report term-missing:skip-covered --cov=.
+	@poetry run py.test -v --cov-report term-missing:skip-covered --cov=.
 
 tox:
-	@pipenv run tox --workdir ~/.cache/tox
+	@poetry run tox --workdir ~/.cache/tox
 
 readme:
-	@pipenv run python -c 'from setup import REPO_USERNAME, NAME; from scripts.utils import make_readme; make_readme(REPO_USERNAME, NAME)'
+	@poetry run python -c 'from setup import REPO_USERNAME, NAME; from scripts.utils import make_readme; make_readme(REPO_USERNAME, NAME)'
 
 upload: readme
-	@pipenv run ./setup.py upload
+	@poetry run ./setup.py upload
 
 test-upload: readme
-	@pipenv run ./setup.py test_upload
+	@poetry run ./setup.py test_upload
 
 clean:
 	@find -E . -regex ".*\.py[cod]" -delete

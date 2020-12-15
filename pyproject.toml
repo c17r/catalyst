@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mountains"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "*"
+
+[tool.poetry.dev-dependencies]
+fabric3 = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-pythonpath = "*"
+tox-pyenv = "*"
+twine = "*"
+flake8 = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
